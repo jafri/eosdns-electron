@@ -1,17 +1,22 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Menu, session, shell } from 'electron'
-import Store from 'electron-store'
-import jetpack from 'fs-jetpack'
-import fs from 'fs'
+import { app, BrowserWindow, ipcMain, Menu, session } from 'electron'
 import path from 'path'
 import { enforceMacOSAppLocation } from 'electron-util'
-import { autoUpdateApp, checkForUpdates } from './updater.js'
-
 import 'electron-context-menu'
 
-// let myWindow = null
-const store = new Store()
+// Install `electron-debug` with `devtron`
+require('electron-debug')({ showDevTools: true })
+
+// Install `vue-devtools`
+require('electron').app.on('ready', () => {
+  let installExtension = require('electron-devtools-installer')
+  installExtension.default(installExtension.VUEJS_DEVTOOLS)
+    .then(() => {})
+    .catch(err => {
+      console.log('Unable to install `vue-devtools`: \n', err)
+    })
+})
 
 /**
  * Set `__static` path to static files in production
@@ -19,6 +24,7 @@ const store = new Store()
  */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__dns_server = require('path').join(__dirname, '/dns_server').replace(/\\/g, '\\\\')
 }
 
 let mainWindow
@@ -77,30 +83,20 @@ function createWindow () {
 
   if (process.platform === 'win32') {
     template.unshift({
-      label: 'Ride Receipts',
+      label: 'EOS DNS',
       submenu: [
         {
           label: 'About',
           click: () =>
             openAboutWindow({
-              icon_path: path.join(__static, '/256x256.png'),
-              copyright: 'Copyright (c) 2018 Hello Efficiency Inc.',
-              open_devtools: process.env.NODE_ENV !== 'production',
-              homepage: 'https:/ridereceipts.io',
-              product_name: 'Ride Receipts',
+              icon_path: path.join(global.__static, '/eosdns.png'),
+              copyright: 'Copyright (c) 2019 EOS DNS.',
+              open_devtools: true,
+              homepage: 'https:/eosdns.io',
+              product_name: 'EOS DNS',
               package_json_dir: path.join(__dirname, '../..'),
               use_version_info: false
             })
-        },
-        {
-          label: 'Check for update',
-          click: function (menuItem, browserWindow, event) {
-            checkForUpdates(menuItem, browserWindow, event)
-          }
-        },
-        {
-          label: 'View license',
-          click: () => shell.openExternal('https://ridereceipts.io/license-agreement/')
         },
         {
           label: `Version ${version}`,
@@ -132,26 +128,20 @@ function createWindow () {
         { role: 'quit' }
       ]
     })
-  }
-
-  if (process.platform === 'darwin') {
+  } else {
     template.unshift({
-      label: 'Ride Receipts',
+      label: 'EOS DNS',
       submenu: [
         { role: 'about' },
         {
-          label: 'View license',
-          click: () => shell.openExternal('https://ridereceipts.io/license-agreement/')
-        },
-        {
-          label: 'Check for update',
-          click: function (menuItem, browserWindow, event) {
-            checkForUpdates(menuItem, browserWindow, event)
-          }
-        },
-        {
           label: `Version ${version}`,
           enabled: false
+        },
+        {
+          label: `Dev Tools`,
+          click: function () {
+            mainWindow.webContents.openDevTools()
+          }
         },
         {
           label: 'View logs',
@@ -172,7 +162,6 @@ function createWindow () {
           }
         },
         { type: 'separator' },
-        { role: 'services' },
         { type: 'separator' },
         { role: 'hide' },
         { role: 'hideothers' },
@@ -196,9 +185,6 @@ app.on('ready', () => {
   createWindow()
   // Move to Application folder on MacOS
   enforceMacOSAppLocation()
-  if (process.env.NODE_ENV === 'production') {
-    autoUpdateApp()
-  }
 })
 
 app.on('window-all-closed', () => {
@@ -219,38 +205,4 @@ app.on('activate', () => {
 
 ipcMain.on('online-status-changed', (event, status) => {
   event.sender.send('onlinestatus', status)
-})
-
-// Download PDF
-ipcMain.on('downloadPDF', (event, data) => {
-  const documentDir = jetpack.cwd(store.get('invoicePath'))
-  const rideDirectory = data.rideType
-  const cancelled = data.cancelled ? data.cancelled : false
-  var invoiceDate = data.invoiceDate
-  var folderPath
-  if (cancelled) {
-    folderPath = `${documentDir.path()}/${data.email}/${rideDirectory}/Cancelled/${data.year}/`
-  } else {
-    folderPath = `${documentDir.path()}/${data.email}/${rideDirectory}/${data.year}/`
-  }
-
-  if (!jetpack.exists(documentDir.path(folderPath))) {
-    jetpack.dir(documentDir.path(folderPath))
-  }
-
-  const pdfBrowser = new BrowserWindow({ show: false, webPreferences: { devTools: false, nodeIntegration: true } })
-  pdfBrowser.loadURL(data.html)
-  pdfBrowser.webContents.on('did-finish-load', () => {
-    pdfBrowser.webContents.printToPDF({
-      marginsType: 1,
-      pageSize: 'A4',
-      printBackground: true
-    }, (error, data) => {
-      if (error) throw error
-      fs.writeFile(`${folderPath}/${rideDirectory}-${invoiceDate}.pdf`, data, (error) => {
-        if (error) throw error
-        pdfBrowser.close()
-      })
-    })
-  })
 })

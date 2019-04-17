@@ -5,6 +5,7 @@ build/*
 package/*
 !build/icons
 node_modules/
+win_certs/
 npm-debug.log
 npm-debug.log.*
 yarn-error.log
@@ -14,4 +15,3 @@ thumbs.db
 _site/
 .env
 src/renderer/config.js
-windows_codesign.pfx

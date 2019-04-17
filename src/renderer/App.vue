@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <div v-if="this.$store.state.LicenseKey.expiring ||  this.$store.state.LicenseKey.expired" class="expire-notification d-flex justify-content-center align-items-center">
-      <div v-if="this.$store.state.LicenseKey.expiring">License is expiring in {{ this.$store.state.LicenseKey.days }} days. <a class="js-external-link renew-link" href="https://gum.co/ridereceiptspro">Click here to renew</a>.</div>
-      <div v-if="this.$store.state.LicenseKey.expired">License has expired. <a class="js-external-link renew-link" href="https://gum.co/ridereceiptspro">Click here to renew</a>.</div>
-    </div>
     <transition name="fade">
       <router-view></router-view>
     </transition>
@@ -12,16 +8,11 @@
 
 <script>
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import jetpack from 'fs-jetpack'
 
 export default {
-  name: 'ridereceipts',
+  name: 'eosdns',
   mounted () {
-    const documentDir = jetpack.cwd(this.$electron.remote.app.getPath('documents'))
 
-    if (!this.$electronstore.get('invoicePath')) {
-      this.$electronstore.set('invoicePath', `${documentDir.path()}/Ride Receipts/`)
-    }
   }
 }
 </script>
