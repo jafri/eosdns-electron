@@ -590,6 +590,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@jafri/sudo-prompt@^8.2.5":
+  version "8.2.5"
+  resolved "https://registry.yarnpkg.com/@jafri/sudo-prompt/-/sudo-prompt-8.2.5.tgz#f4ffc3e9605885136441b2d1e40f425a9d7017f7"
+
 "@nuxt/opencollective@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.2.2.tgz#17adc7d380457379cd14cbb64a435ea196cc4a6e"
@@ -6844,10 +6848,6 @@ style-loader@^0.23.0:
   dependencies:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
-
-sudo-prompt@^8.2.5:
-  version "8.2.5"
-  resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-8.2.5.tgz#cc5ef3769a134bb94b24a631cc09628d4d53603e"
 
 sumchecker@^2.0.2:
   version "2.0.2"

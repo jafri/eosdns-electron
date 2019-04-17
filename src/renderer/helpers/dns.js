@@ -1,4 +1,4 @@
-import sudo from 'sudo-prompt'
+import sudo from '@jafri/sudo-prompt'
 import { remote } from 'electron'
 import path from 'path'
 
@@ -15,6 +15,10 @@ export async function startServer (nodeUrl) {
     process.env.ELECTRON_RUN_AS_NODE = 0
     process.env.NODE_URL = nodeUrl
 
+    const localOptions = Object.assign(options, {
+      env: `ELECTRON_RUN_AS_NODE=0 NODE_URL=${nodeUrl}`
+    })
+
     let startScriptPath
     if (process.env.NODE_ENV === 'development') {
       // eslint-disable-next-line no-undef
@@ -24,7 +28,7 @@ export async function startServer (nodeUrl) {
     }
     console.log('Enable path', startScriptPath)
     const command = `${remote.app.getPath('exe')} ${startScriptPath}`
-    sudo.exec(command, options, (error, stdout, stderr) => {
+    sudo.exec(command, localOptions, (error, stdout, stderr) => {
       if (error) {
         reject(error)
       }
@@ -36,6 +40,9 @@ export async function startServer (nodeUrl) {
 export async function stopServer () {
   return new Promise((resolve, reject) => {
     process.env.ELECTRON_RUN_AS_NODE = 0
+    const localOptions = Object.assign(options, {
+      env: `ELECTRON_RUN_AS_NODE=0`
+    })
 
     let stopScriptPath
     if (process.env.NODE_ENV === 'development') {
@@ -45,7 +52,7 @@ export async function stopServer () {
       stopScriptPath = path.join(process.resourcesPath, 'dns_server/stop.js')
     }
     const command = `${remote.app.getPath('exe')} ${stopScriptPath}`
-    sudo.exec(command, options, (error, stdout, stderr) => {
+    sudo.exec(command, localOptions, (error, stdout, stderr) => {
       if (error) {
         reject(error)
       } else {
