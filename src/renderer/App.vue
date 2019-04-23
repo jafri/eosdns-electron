@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <sidebar/>
     <transition name="fade">
       <router-view></router-view>
     </transition>
@@ -8,9 +9,13 @@
 
 <script>
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import Sidebar from './Sidebar'
 
 export default {
   name: 'eosdns',
+  components: {
+    Sidebar
+  },
   mounted () {
 
   }
@@ -24,6 +29,12 @@ export default {
 
 $font-family-sans-serif: 'Nunito';
 $blue: #0B1E4E;
+
+#app {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
 
 #app,
 html,
@@ -41,7 +52,7 @@ body {
 }
 
 a {
-  color: #00AFB0;
+  color: #7386D5;
   text-decoration: none;
   border-bottom: 0;
 
@@ -51,7 +62,7 @@ a {
 }
 
 ::selection {
-  background-color: rgba(0,175,176,0.75);
+  background-color: #7386D5;
   color: white;
   text-shadow: none
 }

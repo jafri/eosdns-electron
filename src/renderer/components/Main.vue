@@ -1,11 +1,11 @@
 <template>
   <div class="main-splash">
-    <div>
+
       <div class="center-flex">
         <img id="logo" src="static/eosdns-color.png" alt="EOS DNS" key="mainpage">
       </div>
 
-      <div style="width: 550px;">
+      <div class="center-flex by-column">
         <p>Resolve EOS accounts to .eos websites</p>
         <div class="loading" v-if="loading">
           <div class="inner"></div>
@@ -26,8 +26,8 @@
             <a class="js-external-link btn btn-lg main-btn-light" href="http://eoscafeblock.eos/" style="margin-right: 10px;">
               Test
             </a>
-            <div class="btn btn-lg main-btn" @click="disable">
-              Disable
+            <div class="btn btn-lg main-btn" @click="stop">
+              Stop Server
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="btn btn-lg main-btn-light mr-3" @click="reset" style="width: 250px;">
               Reset Defaults
             </div>
-            <div class="btn btn-lg main-btn" @click="enable" style="width: 250px;">
+            <div class="btn btn-lg main-btn" @click="start" style="width: 250px;">
               Start DNS Server
             </div>
           </div>
@@ -46,7 +46,6 @@
           {{ message }}
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -77,12 +76,13 @@ export default {
   },
 
   methods: {
-    async enable () {
+    async start () {
       await startServer(this.nodeUrl)
+
       this.enabled = true
     },
 
-    async disable () {
+    async stop () {
       await stopServer()
       this.enabled = false
     },
@@ -97,7 +97,7 @@ export default {
       console.log(port)
 
       if (port !== 53 && !this.enabled) {
-        this.portTakenMessage = 'There is a DNS server already running at port 53. Enabling will stop that server and start a new one.'
+        this.portTakenMessage = 'There is a DNS server already running at port 53. Starting will stop that server and start a new one.'
       } else {
         this.portTakenMessage = ''
       }
@@ -122,18 +122,25 @@ export default {
   height: 60px;
 }
 
+.by-column {
+  flex-direction: column;
+}
+
 .center-flex {
   display: flex;
   justify-content: center; /* align horizontal */
 }
 
 .main-splash {
+  height: 100%;
+  width: 100%;
+  padding-left: 50px;
+  padding-right: 50px;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-width: 100vw;
-  min-height: 100vh;
+  justify-content: center;
 
   .choose-app {
     color: #000;

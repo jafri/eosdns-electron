@@ -38,6 +38,7 @@ export async function startServer (nodeUrl) {
 }
 
 export async function stopServer () {
+  console.log('stop server')
   return new Promise((resolve, reject) => {
     process.env.ELECTRON_RUN_AS_NODE = 0
     const localOptions = Object.assign(options, {
@@ -51,6 +52,7 @@ export async function stopServer () {
     } else {
       stopScriptPath = path.join(process.resourcesPath, 'dns_server/stop.js')
     }
+
     const command = `${remote.app.getPath('exe')} ${stopScriptPath}`
     sudo.exec(command, localOptions, (error, stdout, stderr) => {
       if (error) {

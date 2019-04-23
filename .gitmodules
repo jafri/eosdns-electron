@@ -1,0 +1,3 @@
+[submodule "dns_server"]
+	path = dns_server
+	url = https://github.com/jafri/eosdns-server

@@ -2,21 +2,8 @@
 
 import { app, BrowserWindow, ipcMain, Menu, session } from 'electron'
 import path from 'path'
-import { enforceMacOSAppLocation } from 'electron-util'
+// import { enforceMacOSAppLocation } from 'electron-util'
 import 'electron-context-menu'
-
-// Install `electron-debug` with `devtron`
-require('electron-debug')({ showDevTools: true })
-
-// Install `vue-devtools`
-require('electron').app.on('ready', () => {
-  let installExtension = require('electron-devtools-installer')
-  installExtension.default(installExtension.VUEJS_DEVTOOLS)
-    .then(() => {})
-    .catch(err => {
-      console.log('Unable to install `vue-devtools`: \n', err)
-    })
-})
 
 /**
  * Set `__static` path to static files in production
@@ -28,7 +15,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-let logsWindow
+// let logsWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -48,6 +35,7 @@ function createWindow () {
     resizable: false
   })
 
+  mainWindow.setResizable(true)
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
@@ -102,24 +90,24 @@ function createWindow () {
           label: `Version ${version}`,
           enabled: false
         },
-        {
-          label: 'View logs',
-          click: function () {
-            if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
-              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
-              logsWindow = new BrowserWindow({
-                width: 860,
-                height: 600,
-                useContentSize: false,
-                resizable: false
-              })
-              logsWindow.setTitle('Logs')
-              logsWindow.loadURL(modalPath)
-            } else {
-              logsWindow.show()
-            }
-          }
-        },
+        // {
+        //   label: 'View logs',
+        //   click: function () {
+        //     if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
+        //       const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
+        //       logsWindow = new BrowserWindow({
+        //         width: 860,
+        //         height: 600,
+        //         useContentSize: false,
+        //         resizable: false
+        //       })
+        //       logsWindow.setTitle('Logs')
+        //       logsWindow.loadURL(modalPath)
+        //     } else {
+        //       logsWindow.show()
+        //     }
+        //   }
+        // },
         { type: 'separator' },
         { role: 'hide' },
         { role: 'hideothers' },
@@ -143,24 +131,24 @@ function createWindow () {
             mainWindow.webContents.openDevTools()
           }
         },
-        {
-          label: 'View logs',
-          click: function () {
-            if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
-              const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
-              logsWindow = new BrowserWindow({
-                width: 860,
-                height: 600,
-                useContentSize: false,
-                resizable: false
-              })
-              logsWindow.setTitle('Logs')
-              logsWindow.loadURL(modalPath)
-            } else {
-              logsWindow.show()
-            }
-          }
-        },
+        // {
+        //   label: 'View logs',
+        //   click: function () {
+        //     if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
+        //       const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
+        //       logsWindow = new BrowserWindow({
+        //         width: 860,
+        //         height: 600,
+        //         useContentSize: false,
+        //         resizable: false
+        //       })
+        //       logsWindow.setTitle('Logs')
+        //       logsWindow.loadURL(modalPath)
+        //     } else {
+        //       logsWindow.show()
+        //     }
+        //   }
+        // },
         { type: 'separator' },
         { type: 'separator' },
         { role: 'hide' },
@@ -183,8 +171,9 @@ app.on('second-instance', function (event, argv, cwd) {
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.on('ready', () => {
   createWindow()
+
   // Move to Application folder on MacOS
-  enforceMacOSAppLocation()
+  // enforceMacOSAppLocation()
 })
 
 app.on('window-all-closed', () => {
@@ -201,6 +190,19 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+// Install `electron-debug` with `devtron`
+require('electron-debug')({ showDevTools: true })
+
+// Install `vue-devtools`
+app.on('ready', () => {
+  let installExtension = require('electron-devtools-installer')
+  installExtension.default(installExtension.VUEJS_DEVTOOLS)
+    .then(() => {})
+    .catch(err => {
+      console.log('Unable to install `vue-devtools`: \n', err)
+    })
 })
 
 ipcMain.on('online-status-changed', (event, status) => {
