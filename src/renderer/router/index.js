@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/Main').default
     },
     {
+      path: '/certificate',
+      name: 'certificates',
+      component: require('@/components/Certificate').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

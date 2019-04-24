@@ -7,16 +7,20 @@
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="#" data-toggle="collapse" aria-expanded="false">Home</a>
+                    <router-link to="/">
+                        Home
+                    </router-link>
                 </li>
                 <li>
-                    <a href="#">About</a>
+                    <router-link to="/certificate">
+                        Enable HTTPS
+                    </router-link>
                 </li>
                 <li>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Websites</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="#">Page 1</a>
+                            <a href="#">eoscafeblock.eos</a>
                         </li>
                         <li>
                             <a href="#">Page 2</a>
@@ -27,19 +31,19 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Portfolio</a>
+                    <a href="#">Manage DNS</a>
                 </li>
                 <li>
-                    <a href="#">Contact</a>
+                    <a class="js-external-link" href="https://t.me/eoscafeblock">Support Telegram</a>
                 </li>
             </ul>
 
             <ul class="list-unstyled CTAs">
                 <li>
-                    <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Github</a>
+                    <a class="download js-external-link" href="https://github.com/jafri/eosdns-electron">Github</a>
                 </li>
                 <li>
-                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Test Website</a>
+                    <a class="article js-external-link" href="http://eoscafeblock.eos">Test Website</a>
                 </li>
             </ul>
         </nav>

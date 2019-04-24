@@ -9,15 +9,12 @@
 
 <script>
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import Sidebar from './Sidebar'
+import Sidebar from './components/Sidebar'
 
 export default {
   name: 'eosdns',
   components: {
     Sidebar
-  },
-  mounted () {
-
   }
 }
 </script>

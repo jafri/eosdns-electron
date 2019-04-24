@@ -3,9 +3,9 @@
   "productName": "EOSDNS",
   "version": "1.0.0",
   "private": true,
-  "author": "EOS Cafe Block <syed@eoscafeblockk.com>",
+  "author": "EOS Cafe Block <syed@eoscafeblock.com>",
   "description": "Resolve EOS accounts to .eos websites.",
-  "license": "LGPL-3.0-or-later",
+  "license": "MPL-2.0",
   "main": "./dist/electron/main.js",
   "keywords": [
     "DNS"
@@ -22,7 +22,8 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix"
+    "postinstall": "npm run lint:fix",
+    "npm": "npm install && git submodule foreach git pull && git submodule foreach npm install"
   },
   "build": {
     "asar": true,
@@ -34,7 +35,10 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "extraResources": "dns_server",
+    "extraResources": [
+      "dns_server",
+      "certs"
+    ],
     "dmg": {
       "contents": [
         {
@@ -65,23 +69,17 @@
     }
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.3",
-    "@babel/runtime": "^7.4.3",
-    "@jafri/sudo-prompt": "^8.2.5",
-    "@vue/eslint-config-standard": "^4.0.0",
     "about-window": "^1.12.1",
     "axios": "^0.18.0",
-    "babel-minify-webpack-plugin": "^0.3.1",
-    "blru": "^0.1.6",
     "bootstrap": "^4.1.0",
     "bootstrap-vue": "^2.0.0-rc.11",
     "detect-port": "^1.3.0",
+    "edit-dns": "^1.1.10",
     "electron-context-menu": "^0.11.0",
     "electron-log": "^3.0.1",
     "electron-store": "^3.0.0",
     "electron-util": "^0.11.0",
-    "sass-loader": "^7.0.1",
-    "trust-cert": "^1.2.0",
+    "trust-cert": "^1.3.2",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
@@ -91,10 +89,14 @@
     "@babel/core": "^7.4.3",
     "@babel/plugin-transform-modules-commonjs": "^7.4.3",
     "@babel/plugin-transform-runtime": "^7.4.3",
+    "@babel/polyfill": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@babel/register": "^7.4.0",
+    "@babel/runtime": "^7.4.3",
+    "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
+    "babel-minify-webpack-plugin": "^0.3.1",
     "cfonts": "^2.1.2",
     "chalk": "^2.1.0",
     "copy-webpack-plugin": "^4.0.1",
@@ -123,6 +125,7 @@
     "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
     "node-sass": "^4.7.2",
+    "sass-loader": "^7.0.1",
     "style-loader": "^0.23.0",
     "url-loader": "^1.0.1",
     "vue-html-loader": "^1.2.4",

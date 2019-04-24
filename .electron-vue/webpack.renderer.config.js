@@ -163,7 +163,8 @@ if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
       '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
-      '__dns_server': `"${path.join(__dirname, '../dns_server').replace(/\\/g, '\\\\')}"`
+      '__dns_server': `"${path.join(__dirname, '../dns_server').replace(/\\/g, '\\\\')}"`,
+      '__certs': `"${path.join(__dirname, '../certs').replace(/\\/g, '\\\\')}"`,
     })
   )
 }

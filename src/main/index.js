@@ -12,6 +12,7 @@ import 'electron-context-menu'
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
   global.__dns_server = require('path').join(__dirname, '/dns_server').replace(/\\/g, '\\\\')
+  global.__certs = require('path').join(__dirname, '/certs').replace(/\\/g, '\\\\')
 }
 
 let mainWindow

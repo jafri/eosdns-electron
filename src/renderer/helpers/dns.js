@@ -1,87 +1,47 @@
-import sudo from '@jafri/sudo-prompt'
+import sudo from 'exec-root'
 import { remote } from 'electron'
 import path from 'path'
 
+process.env.ELECTRON_RUN_AS_NODE = 0
 const options = {
   name: 'EOSDNS',
   // eslint-disable-next-line no-undef
-  icns: path.join(__static, 'icons', 'mac', 'app.icns') // (optional)
+  icns: path.join(__static, 'icons', 'mac', 'app.icns'), // (optional),
+  env: `ELECTRON_RUN_AS_NODE=0`
+}
+
+const scriptPath = (scriptName) => {
+  return process.env.NODE_ENV === 'development'
+    // eslint-disable-next-line no-undef
+    ? path.join(__dns_server, 'scripts', `${scriptName}`)
+    : path.join(process.resourcesPath, `dns_server/scripts/${scriptName}`)
 }
 
 export async function startServer (nodeUrl) {
-  return new Promise((resolve, reject) => {
-    console.log('Start server at', nodeUrl)
+  console.log('Start server at', nodeUrl)
 
-    process.env.ELECTRON_RUN_AS_NODE = 0
-    process.env.NODE_URL = nodeUrl
+  process.env.NODE_URL = nodeUrl
+  const startScriptPath = scriptPath('start.js')
 
-    const localOptions = Object.assign(options, {
-      env: `ELECTRON_RUN_AS_NODE=0 NODE_URL=${nodeUrl}`
-    })
-
-    let startScriptPath
-    if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-undef
-      startScriptPath = path.join(__dns_server, 'start.js')
-    } else {
-      startScriptPath = path.join(process.resourcesPath, 'dns_server/start.js')
-    }
-    console.log('Enable path', startScriptPath)
-    const command = `${remote.app.getPath('exe')} ${startScriptPath}`
-    sudo.exec(command, localOptions, (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-      }
-    })
-    resolve('Started DNS Server')
-  })
+  const command = `"${remote.app.getPath('exe')}" "${startScriptPath}"`
+  const { error } = await sudo.exec(command, options)
+  if (error) throw error
 }
 
 export async function stopServer () {
   console.log('stop server')
-  return new Promise((resolve, reject) => {
-    process.env.ELECTRON_RUN_AS_NODE = 0
-    const localOptions = Object.assign(options, {
-      env: `ELECTRON_RUN_AS_NODE=0`
-    })
+  const stopScriptPath = scriptPath('stop.js')
 
-    let stopScriptPath
-    if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-undef
-      stopScriptPath = path.join(__dns_server, 'stop.js')
-    } else {
-      stopScriptPath = path.join(process.resourcesPath, 'dns_server/stop.js')
-    }
-
-    const command = `${remote.app.getPath('exe')} ${stopScriptPath}`
-    sudo.exec(command, localOptions, (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve('Stopped DNS Server')
-      }
-    })
-  })
+  const command = `"${remote.app.getPath('exe')}" "${stopScriptPath}"`
+  const { error } = await sudo.exec(command, options)
+  if (error) throw error
 }
 
-export async function resetSettings () {
-  return new Promise((resolve, reject) => {
-    process.env.ELECTRON_RUN_AS_NODE = 0
+export async function resetDefaults () {
+  console.log('reset settings')
+  const resetScriptPath = scriptPath('reset.js')
 
-    let resetScriptPath
-    if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-undef
-      resetScriptPath = path.join(__dns_server, 'reset.js')
-    } else {
-      resetScriptPath = path.join(process.resourcesPath, 'dns_server/reset.js')
-    }
-    const command = `${remote.app.getPath('exe')} ${resetScriptPath}`
-    sudo.exec(command, options, (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve('Reset DNS Settings')
-      }
-    })
-  })
+  const command = `"${remote.app.getPath('exe')}" "${resetScriptPath}"`
+  const { error } = await sudo.exec(command, options)
+  if (error) throw error
 }

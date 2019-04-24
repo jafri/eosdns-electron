@@ -6,29 +6,30 @@
 
       <div class="center-flex by-column">
         <p>Resolve EOS accounts to .eos websites</p>
-        <div class="loading" v-if="loading">
-          <div class="inner"></div>
-        </div>
 
-        <!-- <div style="text-align: center;">
+        <div style="text-align: center;">
           Certificate Status:
           <span style="color: green;" v-if="certInstalled"> Installed </span>
           <span style="color: red;" v-else> Not Installed </span>
-        </div> -->
+        </div>
+
         <div @click="installCertificate"
              v-if="!certInstalled"
              class="btn btn-lg main-btn"
              style="width: 300px;">
           Install Certificate
         </div>
-
-        <Server v-if="certInstalled"/>
+        <div @click="uninstallCertificate"
+             v-if="certInstalled"
+             class="btn btn-lg main-btn-light"
+             style="width: 300px;">
+          Uninstall Certificate
+        </div>
       </div>
   </div>
 </template>
 
 <script>
-import Server from './Server'
 import path from 'path'
 import { generateTrust } from 'trust-cert'
 
@@ -42,11 +43,9 @@ if (process.env.NODE_ENV === 'development') {
   certPath = path.join(process.resourcesPath, 'certs/eos_root_ca.crt')
 }
 
-export default {
-  components: {
-    Server
-  },
+console.log(certPath)
 
+export default {
   data () {
     return {
       certInstalled: false
@@ -60,6 +59,11 @@ export default {
   methods: {
     async installCertificate () {
       await trust.installFromFile(certPath)
+      await this.updateCertStatus()
+    },
+
+    async uninstallCertificate () {
+      await trust.uninstall(certPath)
       await this.updateCertStatus()
     },
 
