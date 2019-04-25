@@ -75,7 +75,6 @@ export default {
       startServer(this.nodeUrl)
       console.log('Started')
 
-
       try {
         await this.updateSavedDefaults()
       } catch (e) {
