@@ -25,9 +25,13 @@ export async function startServer (nodeUrl) {
   const startScriptPath = scriptPath('start.js')
 
   const command = `"${electronPath}" "${startScriptPath}"`
-  const { stdout, stderr, error } = await sudo.exec(command, options)
-  console.log('Stdout', stdout, 'Stderr', stderr, 'error', error)
-  if (error) throw error
+  try {
+    const { stdout, stderr, error } = await sudo.exec(command, options)
+    console.log('Stdout', stdout, 'Stderr', stderr, 'error', error)
+    if (error) throw error
+  } catch (e) {
+    console.log('Error in starting script:', e)
+  }
 }
 
 export async function stopServer () {
