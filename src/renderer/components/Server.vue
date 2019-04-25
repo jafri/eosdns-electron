@@ -41,9 +41,10 @@
 </template>
 
 <script>
-import { startServer, stopServer, resetDefaults } from '@/helpers/dns'
 import detect from 'detect-port'
 import EditDns from 'edit-dns'
+import { ipcRenderer } from 'electron'
+
 const editDns = new EditDns('EOSDNS')
 
 export default {
@@ -70,35 +71,36 @@ export default {
     }
   },
 
+  watch: {
+    enabled: function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        ipcRenderer.send('server-enabled', newVal)
+      }
+    }
+  },
+
   methods: {
     async start () {
-      startServer(this.nodeUrl)
-      console.log('Started')
+      ipcRenderer.send('start-server', this.nodeUrl)
 
-      try {
-        await this.updateSavedDefaults()
-      } catch (e) {
-        console.log('Error in start of defaults', e)
-      }
-
-      this.checkStartInterval = setInterval(async () => {
-        try {
-          await this.updateSavedDefaults()
-        } catch (e) {
-          console.log('Error in interval', e)
-        }
-      }, 1000)
+      await this.updateSavedDefaults()
+      this.checkStartInterval = setInterval(() => this.updateSavedDefaults(), 1000)
     },
 
     async stop () {
-      await stopServer()
-      await this.checkPort()
-      await this.updateSavedDefaults()
+      ipcRenderer.on('stop-server', (event, arg) => {
+        this.checkPort().then(() => {
+          this.updateSavedDefaults()
+        })
+      })
+      ipcRenderer.send('stop-server')
     },
 
     async resetDefaults () {
-      await resetDefaults()
-      await this.updateSavedDefaults()
+      ipcRenderer.on('reset-defaults', (event, arg) => {
+        this.updateSavedDefaults()
+      })
+      ipcRenderer.send('reset-defaults')
     },
 
     async updateSavedDefaults (creation) {

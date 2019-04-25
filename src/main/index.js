@@ -1,9 +1,10 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, Menu, session } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, session, dialog } from 'electron'
 import path from 'path'
 // import { enforceMacOSAppLocation } from 'electron-util'
 import 'electron-context-menu'
+import { startServer, stopServer, resetDefaults } from './dns'
 
 /**
  * Set `__static` path to static files in production
@@ -15,6 +16,7 @@ if (process.env.NODE_ENV !== 'development') {
   global.__certs = require('path').join(__dirname, '/certs').replace(/\\/g, '\\\\')
 }
 
+let enabled = false
 let mainWindow
 // let logsWindow
 const winURL = process.env.NODE_ENV === 'development'
@@ -38,6 +40,27 @@ function createWindow () {
 
   mainWindow.setResizable(true)
   mainWindow.loadURL(winURL)
+
+  mainWindow.on('close', function (e) {
+    if (!enabled) return
+
+    const choice = dialog.showMessageBox(this, {
+      type: 'question',
+      buttons: ['Yes', 'No'],
+      title: 'Confirm',
+      message: 'Closing the app will stop the running server. Are you sure you want to quit?'
+    })
+
+    // Stop closing
+    e.preventDefault()
+
+    // Yes
+    if (choice === 0) {
+      stopServer().then(() => {
+        process.exit(0)
+      })
+    }
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -91,24 +114,6 @@ function createWindow () {
           label: `Version ${version}`,
           enabled: false
         },
-        // {
-        //   label: 'View logs',
-        //   click: function () {
-        //     if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
-        //       const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
-        //       logsWindow = new BrowserWindow({
-        //         width: 860,
-        //         height: 600,
-        //         useContentSize: false,
-        //         resizable: false
-        //       })
-        //       logsWindow.setTitle('Logs')
-        //       logsWindow.loadURL(modalPath)
-        //     } else {
-        //       logsWindow.show()
-        //     }
-        //   }
-        // },
         { type: 'separator' },
         { role: 'hide' },
         { role: 'hideothers' },
@@ -132,24 +137,6 @@ function createWindow () {
             mainWindow.webContents.openDevTools()
           }
         },
-        // {
-        //   label: 'View logs',
-        //   click: function () {
-        //     if (typeof logsWindow === 'undefined' || logsWindow === null || logsWindow.isDestroyed()) {
-        //       const modalPath = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/#/view-logs' : `file://${__dirname}/index.html#view-logs`
-        //       logsWindow = new BrowserWindow({
-        //         width: 860,
-        //         height: 600,
-        //         useContentSize: false,
-        //         resizable: false
-        //       })
-        //       logsWindow.setTitle('Logs')
-        //       logsWindow.loadURL(modalPath)
-        //     } else {
-        //       logsWindow.show()
-        //     }
-        //   }
-        // },
         { type: 'separator' },
         { type: 'separator' },
         { role: 'hide' },
@@ -208,4 +195,22 @@ app.on('ready', () => {
 
 ipcMain.on('online-status-changed', (event, status) => {
   event.sender.send('onlinestatus', status)
+})
+
+ipcMain.on('start-server', (event, arg) => {
+  startServer(arg)
+})
+
+ipcMain.on('stop-server', async (event, arg) => {
+  await stopServer()
+  event.sender.send('stop-server')
+})
+
+ipcMain.on('reset-defaults', async (event, arg) => {
+  await resetDefaults()
+  event.sender.send('reset-defaults')
+})
+
+ipcMain.on('server-enabled', (event, arg) => {
+  enabled = arg
 })
