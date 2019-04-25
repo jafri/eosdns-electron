@@ -9,6 +9,7 @@ const options = {
   icns: path.join(__static, 'icons', 'mac', 'app.icns'), // (optional),
   env: `ELECTRON_RUN_AS_NODE=0`
 }
+const electronPath = remote.app.getPath('exe')
 
 const scriptPath = (scriptName) => {
   return process.env.NODE_ENV === 'development'
@@ -23,8 +24,9 @@ export async function startServer (nodeUrl) {
   process.env.NODE_URL = nodeUrl
   const startScriptPath = scriptPath('start.js')
 
-  const command = `"${remote.app.getPath('exe')}" "${startScriptPath}"`
-  const { error } = await sudo.exec(command, options)
+  const command = `"${electronPath}" "${startScriptPath}"`
+  const { stdout, stderr, error } = await sudo.exec(command, options)
+  console.log('Stdout', stdout, 'Stderr', stderr, 'error', error)
   if (error) throw error
 }
 
@@ -32,7 +34,7 @@ export async function stopServer () {
   console.log('stop server')
   const stopScriptPath = scriptPath('stop.js')
 
-  const command = `"${remote.app.getPath('exe')}" "${stopScriptPath}"`
+  const command = `"${electronPath}" "${stopScriptPath}"`
   const { error } = await sudo.exec(command, options)
   if (error) throw error
 }
@@ -41,7 +43,7 @@ export async function resetDefaults () {
   console.log('reset settings')
   const resetScriptPath = scriptPath('reset.js')
 
-  const command = `"${remote.app.getPath('exe')}" "${resetScriptPath}"`
+  const command = `"${electronPath}" "${resetScriptPath}"`
   const { error } = await sudo.exec(command, options)
   if (error) throw error
 }
