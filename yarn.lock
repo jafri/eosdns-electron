@@ -2676,9 +2676,9 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-edit-dns@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/edit-dns/-/edit-dns-1.1.8.tgz#97680a437944ae6afaec8976df88bfcafb689577"
+edit-dns@^1.1.10:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/edit-dns/-/edit-dns-1.1.10.tgz#8312991a404243dd8df29507991145d91a034e17"
   dependencies:
     exec-root "^1.0.5"
 
