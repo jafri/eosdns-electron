@@ -75,8 +75,20 @@ export default {
       startServer(this.nodeUrl)
       console.log('Started')
 
-      await this.updateSavedDefaults()
-      this.checkStartInterval = setInterval(() => this.updateSavedDefaults(), 1000)
+
+      try {
+        await this.updateSavedDefaults()
+      } catch (e) {
+        console.log('Error in start of defaults', e)
+      }
+
+      this.checkStartInterval = setInterval(async () => {
+        try {
+          await this.updateSavedDefaults()
+        } catch (e) {
+          console.log('Error in interval', e)
+        }
+      }, 1000)
     },
 
     async stop () {
