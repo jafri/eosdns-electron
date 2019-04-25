@@ -15,14 +15,14 @@
           <span style="color: green;" v-if="certInstalled"> Installed </span>
           <span style="color: red;" v-else> Not Installed </span>
         </div> -->
-        <div @click="installCertificate"
+        <!-- <div @click="installCertificate"
              v-if="!certInstalled"
              class="btn btn-lg main-btn"
              style="width: 300px;">
           Install Certificate
-        </div>
+        </div> -->
 
-        <Server v-if="certInstalled"/>
+        <Server/>
       </div>
   </div>
 </template>

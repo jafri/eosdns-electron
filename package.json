@@ -58,7 +58,16 @@
       "icon": "build/icons/mac/app.icns"
     },
     "win": {
-      "icon": "build/icons/win/app.ico"
+      "icon": "build/icons/win/app.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "icon": "build/icons/png/256x256.png",
