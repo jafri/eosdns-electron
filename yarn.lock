@@ -801,8 +801,8 @@ acorn-jsx@^5.0.0:
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.0.1.tgz#32a064fd925429216a09b141102bfdd185fae40e"
 
 acorn@^6.0.2, acorn@^6.0.5, acorn@^6.0.7:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.1.1.tgz#7d25ae05bb8ad1f9b699108e1094ecd7884adc1f"
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.1.tgz#531e58ba3f51b9dacb9a6646ca4debf5b14ca474"
 
 address@^1.0.1:
   version "1.0.3"
@@ -3165,6 +3165,10 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
 exec-root@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/exec-root/-/exec-root-1.0.5.tgz#6c1b79b01ebbdffe24cf6dda6291589e081442bd"
+
+exec-root@^1.0.8:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/exec-root/-/exec-root-1.0.9.tgz#22f6f37b951b5a24c42a733381b9f23cc0174351"
 
 execa@^0.7.0:
   version "0.7.0"
