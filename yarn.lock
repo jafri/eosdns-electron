@@ -3166,6 +3166,10 @@ exec-root@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/exec-root/-/exec-root-1.0.5.tgz#6c1b79b01ebbdffe24cf6dda6291589e081442bd"
 
+exec-root@^1.0.8:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/exec-root/-/exec-root-1.0.9.tgz#22f6f37b951b5a24c42a733381b9f23cc0174351"
+
 execa@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-0.7.0.tgz#944becd34cc41ee32a63a9faf27ad5a65fc59777"
@@ -4754,8 +4758,8 @@ lodash.toplainobject@^3.0.0:
     lodash.keysin "^3.0.0"
 
 lodash@^4.0.0, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@~4.17.10:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
 
 log-update@^1.0.2:
   version "1.0.2"
